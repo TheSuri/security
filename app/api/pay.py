@@ -17,6 +17,7 @@ from app.models.session import (
 @post('/pay')
 @logged_in
 def do_payment(db, session):
+    session_id = request.forms.get("session_id")
     sender = get_user(db, session.get_username())
     recipient = db.execute(
         "SELECT * FROM users WHERE users.username='{}' LIMIT 1 OFFSET 0".format(
@@ -25,7 +26,13 @@ def do_payment(db, session):
     ).fetchone()
     payment_amount = int(request.forms.get('amount'))
     error = None
-    if (sender.get_coins() < payment_amount):
+    if (session_id is None):
+        response.status = 401
+        error = "No session id provided, you dirty CSRFer."
+    elif (session_id != session.get_id()):
+        response.status = 401
+        error = "Incorrect session id, you dirty CSRFer."
+    elif (sender.get_coins() < payment_amount):
         response.status = 400
         error = "Not enough funds."
     elif (payment_amount < 0):
@@ -50,4 +57,3 @@ def do_payment(db, session):
         session_user=sender,
         payment_error=error,
     )
-

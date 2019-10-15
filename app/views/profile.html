@@ -24,8 +24,29 @@
       <div class="form-label">Amount:</div>
       <div class="form-input"><input name="amount" type="number" /></div>
     </div>
+    <input id="session_id" name="session_id" type="hidden" /></div>
     <input class="form-button" type="submit" value="Pay"/>
   </form>
+
+  <script>
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    document.getElementById("session_id").value = getCookie("session");
+  </script>
 
   {% if payment_error %}
   <div class="error"><p>{{ payment_error }}</p></div>
